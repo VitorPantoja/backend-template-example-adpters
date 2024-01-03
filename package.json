@@ -2,14 +2,30 @@
   "name": "backend-template",
   "version": "1.0.0",
   "description": "",
-  "main": "index.js",
+  "main": "./src/server",
   "scripts": {
-    "test": "echo \"Error: no test specified\" && exit 1"
+    "test": "echo \"Error: no test specified\" && exit 1",
+    "start": "node build/src/server.js",
+    "typescript": "ts-node-dev --quiet --transpile-only --exit-child --ignore-watch node_modules --",
+    "dev": "npm run typescript ./src/server"
   },
   "repository": {
     "type": "git",
     "url": "backend-template"
   },
   "author": "",
-  "license": "ISC"
+  "license": "ISC",
+  "dependencies": {
+    "cors": "^2.8.5",
+    "dotenv": "^16.3.1",
+    "express": "^4.18.2",
+    "express-rate-limit": "^7.1.5",
+    "helmet": "^7.1.0"
+  },
+  "devDependencies": {
+    "@types/cors": "^2.8.17",
+    "@types/express": "^4.17.21",
+    "ts-node-dev": "^1.1.8",
+    "typescript": "^5.3.3"
+  }
 }

@@ -1,21 +1,21 @@
-import { type FastifyInstance, type FastifyReply, type FastifyRequest } from 'fastify';
-import { InternalServerError } from '../../../utils/http-exceptions';
+import { Express, Request, Response, NextFunction } from 'express';
 import { HttpResponse } from '../../../utils/http-response';
-import { Utils } from '@sovi-tech/shared';
+import { Utils } from '../../../utils';
+import { InternalServerError } from '../../../utils/http-exceptions';
 
 export default class CatchError {
-  constructor(app: FastifyInstance) {
-    app.setErrorHandler((error, request: FastifyRequest, reply: FastifyReply) => {
+  constructor(app: Express) {
+    app.use((error: Error, request: Request, response: Response, next: NextFunction) => {
       const httpResponse = HttpResponse.error(error);
 
       if (httpResponse.statusCode >= InternalServerError.code) {
         Utils.TerminalLogger.log(
-          `[${InternalServerError.code}] ${request.method.toUpperCase()} ${request.routeOptions.url}`,
+          `[${InternalServerError.code}] ${request.method.toUpperCase()} ${request.path}`,
           {
             scope: 'API',
             level: 'ERROR',
           },
-          `Route: ${request.url}`,
+          `Route: ${request.originalUrl}`,
           `\nRequest: ${JSON.stringify({
             body: request.body,
             params: request.params,
@@ -26,7 +26,7 @@ export default class CatchError {
         );
       }
 
-      return reply.status(httpResponse.statusCode).send(httpResponse);
+      response.status(httpResponse.statusCode).json(httpResponse);
     });
   }
 }

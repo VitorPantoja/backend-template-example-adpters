@@ -1,9 +1,9 @@
-import dotenv, { type DotenvConfigOptions } from "dotenv";
-import fs from "node:fs";
-import path from "node:path";
+import dotenv, { type DotenvConfigOptions } from 'dotenv';
+import fs from 'node:fs';
+import path from 'node:path';
 
 type LoadEnvironmentParams = {
-  ambient?: NodeJS.ProcessEnv["NODE_ENV"];
+  ambient?: NodeJS.ProcessEnv['NODE_ENV'];
 };
 
 type Env = {
@@ -30,10 +30,7 @@ export default class Environment {
     const dotenvConfigOptions: DotenvConfigOptions = {};
 
     if (params?.ambient) {
-      dotenvConfigOptions.path = path.resolve(
-        process.cwd(),
-        `.env.${params?.ambient}`
-      );
+      dotenvConfigOptions.path = path.resolve(process.cwd(), `.env.${params?.ambient}`);
     }
 
     const dotenvResult = dotenv.config(dotenvConfigOptions);
@@ -43,9 +40,7 @@ export default class Environment {
     }
 
     if (!dotenvResult.parsed) {
-      throw new Error(
-        `Adicione um arquivo '.env' na raiz do projeto. Verifique o arquivo '.env.exemple'`
-      );
+      throw new Error(`Adicione um arquivo '.env' na raiz do projeto. Verifique o arquivo '.env.exemple'`);
     }
 
     this.verifyEnvironments(dotenvResult.parsed);
@@ -53,27 +48,23 @@ export default class Environment {
     this._env = dotenvResult.parsed as unknown as Env;
   }
 
-  verifyEnvironments(
-    parsedEnvironments: { [name: string]: string } | undefined
-  ) {
+  verifyEnvironments(parsedEnvironments: { [name: string]: string } | undefined) {
     if (!parsedEnvironments) {
-      throw new Error("Nenhuma variável de ambiente encontrada.");
+      throw new Error('Nenhuma variável de ambiente encontrada.');
     }
 
     const environments = Object.keys(parsedEnvironments);
 
-    const pathEnvExemple = path.resolve(".env.exemple");
+    const pathEnvExemple = path.resolve('.env');
 
     const envExemple = dotenv.parse(fs.readFileSync(pathEnvExemple));
 
     const environmentsRequired = Object.keys(envExemple);
 
     for (const environmentRequired of environmentsRequired) {
-      if (
-        !environments.find((environment) => environment === environmentRequired)
-      ) {
+      if (!environments.find(environment => environment === environmentRequired)) {
         throw new Error(
-          `Variável de ambiente '${environmentRequired}' não encontrada. Verifique o arquivo '.env.exemple'`
+          `Uepa ! Variável de ambiente '${environmentRequired}' não encontrada. Verifique o arquivo '.env'`,
         );
       }
     }

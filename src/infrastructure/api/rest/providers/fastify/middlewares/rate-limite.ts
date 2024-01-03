@@ -1,21 +1,23 @@
-import rateLimit from "@fastify/rate-limit";
-import { type FastifyInstance, type FastifyRequest } from "fastify";
-import { TooManyRequestError } from "../../../utils/http-exceptions";
+import express, { Express } from 'express';
+import rateLimit from 'express-rate-limit';
+import { TooManyRequestError } from '../../../utils/http-exceptions';
 
 export default class RateLimit {
-  constructor(app: FastifyInstance) {
-    app.register(rateLimit, {
-      global: true,
+  constructor(app: Express) {
+    const limiter = rateLimit({
+      windowMs: 1 * 60 * 1000, // 1 minute
       max: 10,
-      timeWindow: "1 minute",
-      errorResponseBuilder: (_request, _context) => {
-        return new TooManyRequestError("Muitas requisições.");
-      },
-      keyGenerator: (request: FastifyRequest) => {
-        const { ip, url, routeOptions } = request;
+      keyGenerator: request => {
+        const { ip, originalUrl } = request;
 
-        return `${url}-${ip}-${routeOptions.url}`;
+        return `${originalUrl}-${ip}`;
+      },
+      handler: (_request, response, next) => {
+        next(new TooManyRequestError('Calma ai paizão !'));
       },
     });
+
+    // Aplicar o middleware rate-limit ao aplicativo Express
+    app.use(limiter);
   }
 }

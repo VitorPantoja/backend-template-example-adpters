@@ -1,8 +1,8 @@
-import { type FastifyInstance } from 'fastify';
-import helmet from '@fastify/helmet';
+import express, { Express } from 'express';
+import helmet from 'helmet';
 
 export default class Helmet {
-  constructor(app: FastifyInstance) {
-    app.register(helmet);
+  constructor(app: Express) {
+    app.use(helmet());
   }
 }

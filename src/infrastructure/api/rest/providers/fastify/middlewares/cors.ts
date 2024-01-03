@@ -1,8 +1,8 @@
-import { type FastifyInstance } from 'fastify';
-import cors from '@fastify/cors';
+import express, { Express } from 'express';
+import cors from 'cors';
 
 export default class Cors {
-  constructor(app: FastifyInstance) {
-    app.register(cors);
+  constructor(app: Express) {
+    app.use(cors());
   }
 }
