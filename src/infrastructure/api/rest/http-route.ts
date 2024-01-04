@@ -28,7 +28,7 @@ export type HttpRequestType<Body, Params, Query> = Pick<IncomingMessage, 'header
   query?: Query;
 };
 
-export type RequestMethods = 'get' | 'post' | 'put' | 'delete';
+export type RequestMethods = 'get' | 'post' | 'put' | 'delete' | 'patch';
 
 export type Schema<Body, Params, Query> = Pick<HttpRequestType<Body, Params, Query>, 'body' | 'params' | 'query'>;
 
